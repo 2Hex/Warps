@@ -30,7 +30,7 @@ public class DeleteWarp implements CommandExecutor {
             }
             if(!plugin.getConfig().isConfigurationSection("warps." + args[0])){
                 player.sendMessage(ChatColor.RED + "There is no Warp such as " + ChatColor.YELLOW + args[0]);
-
+            return true;
             }
             plugin.getConfig().set("warps." + args[0], null);
             player.sendMessage(ChatColor.GREEN + "Deleted Successfully.");

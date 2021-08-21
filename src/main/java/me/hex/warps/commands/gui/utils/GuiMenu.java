@@ -13,6 +13,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 
 public class GuiMenu {
+    public Inventory getInventory(){
+        Inventory gui2 = Bukkit.createInventory(null, 54, ChatColor.GREEN + "Warps: (Page 2)");
+        return gui2;
+    }
+    public static ItemStack next(){
+        ItemStack next = new ItemStack(Material.ARROW);
+        ItemMeta nextMeta = next.getItemMeta();
+        nextMeta.setDisplayName(ChatColor.DARK_PURPLE + "Next Page");
+        next.setItemMeta(nextMeta);
+        return next;
+    }
     private final Warps plugin;
 
     public GuiMenu(Warps plugin) {
@@ -31,15 +42,14 @@ public class GuiMenu {
         ConfigurationSection section = plugin.getConfig().getConfigurationSection("warps");
 
         Inventory gui = Bukkit.createInventory(player, 54, ChatColor.GREEN + "Warps:");
-        Inventory gui2 = Bukkit.createInventory(player, 54, ChatColor.GREEN + "Warps: (Page 2)");
-        gui2.setItem(53, Next.next());
+        getInventory().setItem(53, next());
         //For every player, add their name to gui
         int i = 0;
-        if (section.getKeys(false).isEmpty()){
+        if (section.getKeys(false).isEmpty()) {
             player.sendMessage(ChatColor.RED + "There are no warps.");
             return;
         }
-        if (section.getKeys(false) == null){
+        if (section.getKeys(false) == null) {
             player.sendMessage(ChatColor.RED + "There are no warps.");
             return;
         }
@@ -60,10 +70,13 @@ public class GuiMenu {
                 gui.addItem(item);
             }
             i++;
-            gui2.addItem(item);
+            getInventory().addItem(item);
+
         }
         player.openInventory(gui);
+
     }
+
 }
 
 
