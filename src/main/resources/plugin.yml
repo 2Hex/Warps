@@ -1,0 +1,19 @@
+name: Warps
+version: ${project.version}
+main: me.hex.warps.Warps
+authors: [ 2Hex ]
+description: Warps for the lovely HyperEvents Server :)
+
+commands:
+  setwarp:
+    permission: warps.warps
+    aliases: [warpset]
+  warp:
+    permission: warps.warps
+    aliases: [warpto]
+  deletewarp:
+    permission: warps.warps
+    aliases: [removewarp]
+  warps:
+    permission: warps.warps
+    aliases: [warpgui]
