@@ -18,5 +18,6 @@ public class RenameConfig {
                 val = new ArrayList((List)val);
             config.set(toPath + toDot + s, val);
         }
+        config.set(fromPath, null);
     }
 }

@@ -13,8 +13,9 @@ import org.bukkit.plugin.PluginManager;
 public interface Registration {
     static void registry(final Warps plugin) {
         final PluginManager pluginManager = plugin.getServer().getPluginManager();
-        pluginManager.registerEvents(new ChatEvent(plugin), plugin);
-        pluginManager.registerEvents(new ClickEvent(plugin, new ChatEvent(plugin)), plugin);
+        ChatEvent chatEvent = new ChatEvent(plugin);
+        pluginManager.registerEvents(chatEvent, plugin);
+        pluginManager.registerEvents(new ClickEvent(plugin, chatEvent), plugin);
         plugin.getCommand("warp").setExecutor(new Warp(plugin));
         plugin.getCommand("deletewarp").setExecutor(new DeleteWarp(plugin));
         plugin.getCommand("setwarp").setExecutor(new SetWarp(plugin));
