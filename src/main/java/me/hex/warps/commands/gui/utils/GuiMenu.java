@@ -68,6 +68,8 @@ public class GuiMenu {
             item.setItemMeta(meta);
             if (i < 54) {
                 gui.addItem(item);
+                if(gui.getItem(53).getType() != Material.ARROW)
+                    gui.setItem(53, next());
             }
             i++;
             getInventory().addItem(item);

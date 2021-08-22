@@ -38,6 +38,8 @@ public class ChatEvent implements Listener {
     @EventHandler
     public void onChat(final AsyncPlayerChatEvent event) {
         final String message = event.getMessage();
+        if(this.waitingInputMap.containsKey(event.getPlayer().getUniqueId()))
+            event.setCancelled(true);
         Optional.ofNullable(this.waitingInputMap.remove(event.getPlayer().getUniqueId())).ifPresent(consumer -> consumer.accept(message));
     }
 

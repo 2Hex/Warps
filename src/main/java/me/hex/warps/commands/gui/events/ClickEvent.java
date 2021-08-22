@@ -27,11 +27,12 @@ public class ClickEvent implements Listener {
         this.chat = chat;
     }
     @EventHandler
-    public void onClick(InventoryClickEvent event){
+    public void onClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        if(!event.getClickedInventory().getTitle().contains(ChatColor.GREEN + "Warps")) return;
-        if(!event.getCurrentItem().hasItemMeta()) return;
-        if(event.getCurrentItem().getType() == Material.ARROW) {
+        if(event.getClickedInventory() == null || event.getClickedInventory().getTitle() == null) return;
+        if (!event.getClickedInventory().getTitle().contains(ChatColor.GREEN + "Warps")) return;
+        if (!event.getCurrentItem().hasItemMeta()) return;
+        if (event.getCurrentItem().getType() == Material.PAPER) {
             if (event.isShiftClick()) {
                 ItemStack currentItem = event.getCurrentItem();
                 ItemMeta currentMeta = currentItem.getItemMeta();
@@ -71,12 +72,12 @@ public class ClickEvent implements Listener {
                 player.chat("/deletewarp " + newerWarp);
                 event.setCancelled(true);
                 player.closeInventory();
+                return;
             }
-        } else {
-            if (event.getCurrentItem() == GuiMenu.next()) {
-                player.openInventory(menu.getInventory());
+        }
+        if (event.getCurrentItem().isSimilar(GuiMenu.next())) {
+            player.openInventory(menu.getInventory());
 
-            }
         }
     }
     @EventHandler
