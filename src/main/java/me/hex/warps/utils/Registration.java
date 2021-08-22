@@ -16,7 +16,8 @@ public interface Registration {
         ChatEvent chatEvent = new ChatEvent(plugin);
         GuiMenu menu = new GuiMenu(plugin);
         pluginManager.registerEvents(chatEvent, plugin);
-        pluginManager.registerEvents(new ClickEvent(plugin, chatEvent, menu), plugin);
+        pluginManager.registerEvents(new ClickEvent(plugin, chatEvent), plugin);
+        pluginManager.registerEvents(menu, plugin);
         plugin.getCommand("warp").setExecutor(new Warp(plugin));
         plugin.getCommand("deletewarp").setExecutor(new DeleteWarp(plugin));
         plugin.getCommand("setwarp").setExecutor(new SetWarp(plugin));

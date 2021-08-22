@@ -1,7 +1,6 @@
 package me.hex.warps.commands.gui.events;
 
 import me.hex.warps.Warps;
-import me.hex.warps.commands.gui.utils.GuiMenu;
 import me.hex.warps.commands.gui.utils.RenameConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -12,28 +11,27 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class ClickEvent implements Listener {
     private final Warps plugin;
     private final ChatEvent chat;
-    private final GuiMenu menu;
 
-    public ClickEvent(Warps plugin, ChatEvent chat, GuiMenu menu) {
+    public ClickEvent(Warps plugin, ChatEvent chat) {
         this.plugin = plugin;
-        this.menu = menu;
         this.chat = chat;
     }
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         if(event.getClickedInventory() == null || event.getClickedInventory().getTitle() == null) return;
         if (!event.getClickedInventory().getTitle().contains(ChatColor.GREEN + "Warps")) return;
         if (!event.getCurrentItem().hasItemMeta()) return;
         if (event.getCurrentItem().getType() == Material.PAPER) {
+            System.out.println("4");
             if (event.isShiftClick()) {
+                System.out.println("shift");
                 ItemStack currentItem = event.getCurrentItem();
                 ItemMeta currentMeta = currentItem.getItemMeta();
                 String shiftWarp = ChatColor.stripColor(currentMeta.getDisplayName());
@@ -43,6 +41,7 @@ public class ClickEvent implements Listener {
 
                 if (!plugin.getConfig().isConfigurationSection("warps." + shiftWarp)) {
                     player.sendMessage(ChatColor.RED + "This warp does not exist / is not a warp.");
+                    System.out.println("no exist");
                     return;
                 }
                 chat.requestChatInput(player.getUniqueId(), 5000, input -> {
@@ -58,6 +57,7 @@ public class ClickEvent implements Listener {
                 return;
             }
             if (event.isLeftClick()) {
+                System.out.println("left");
                 ItemMeta meta = event.getCurrentItem().getItemMeta();
                 String newWarp = ChatColor.stripColor(meta.getDisplayName());
                 player.chat("/warp " + newWarp);
@@ -66,18 +66,14 @@ public class ClickEvent implements Listener {
                 return;
             }
             if (event.getClick().equals(ClickType.DROP)) {
+                System.out.println("drop");
                 ItemMeta meta = event.getCurrentItem().getItemMeta();
                 String newerWarp = ChatColor.stripColor(meta.getDisplayName());
                 event.getClickedInventory().remove(event.getCurrentItem());
                 player.chat("/deletewarp " + newerWarp);
                 event.setCancelled(true);
                 player.closeInventory();
-                return;
             }
-        }
-        if (event.getCurrentItem().isSimilar(GuiMenu.next())) {
-            player.openInventory(menu.getInventory());
-
         }
     }
     @EventHandler
