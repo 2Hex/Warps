@@ -22,26 +22,27 @@ public class ClickEvent implements Listener {
         this.plugin = plugin;
         this.chat = chat;
     }
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        if(event.getClickedInventory() == null || event.getClickedInventory().getTitle() == null) return;
-        if (!event.getClickedInventory().getTitle().contains(ChatColor.GREEN + "Warps")) return;
-        if (!event.getCurrentItem().hasItemMeta()) return;
+        if(event.getClickedInventory() == null || event.getClickedInventory().getTitle() == null)
+            return;
+        if (!event.getClickedInventory().getTitle().contains(ChatColor.GREEN + "Warps"))
+            return;
+        if (!event.getCurrentItem().hasItemMeta()) 
+            return;
+        if(event.getCurrentItem() == null)
+            return;
+
         if (event.getCurrentItem().getType() == Material.PAPER) {
-            System.out.println("4");
             if (event.isShiftClick()) {
-                System.out.println("shift");
                 ItemStack currentItem = event.getCurrentItem();
                 ItemMeta currentMeta = currentItem.getItemMeta();
                 String shiftWarp = ChatColor.stripColor(currentMeta.getDisplayName());
                 player.sendMessage(ChatColor.GREEN + "Send Rename in chat");
-                event.setCancelled(true);
-                player.closeInventory();
 
                 if (!plugin.getConfig().isConfigurationSection("warps." + shiftWarp)) {
                     player.sendMessage(ChatColor.RED + "This warp does not exist / is not a warp.");
-                    System.out.println("no exist");
                     return;
                 }
                 chat.requestChatInput(player.getUniqueId(), 5000, input -> {
@@ -54,31 +55,32 @@ public class ClickEvent implements Listener {
                     RenameConfig.copyConfigSection(config, "warps." + shiftWarp, "warps." + input);
                     currentMeta.setDisplayName(ChatColor.YELLOW + input);
                 });
+                event.setCancelled(true);
                 return;
             }
             if (event.isLeftClick()) {
-                System.out.println("left");
                 ItemMeta meta = event.getCurrentItem().getItemMeta();
                 String newWarp = ChatColor.stripColor(meta.getDisplayName());
                 player.chat("/warp " + newWarp);
-                event.setCancelled(true);
                 player.closeInventory();
+                event.setCancelled(true);
                 return;
             }
             if (event.getClick().equals(ClickType.DROP)) {
-                System.out.println("drop");
                 ItemMeta meta = event.getCurrentItem().getItemMeta();
                 String newerWarp = ChatColor.stripColor(meta.getDisplayName());
                 event.getClickedInventory().remove(event.getCurrentItem());
                 player.chat("/deletewarp " + newerWarp);
-                event.setCancelled(true);
                 player.closeInventory();
+                event.setCancelled(true);
             }
         }
     }
     @EventHandler
-    public void onDrag(InventoryDragEvent event){
-        if(!event.getInventory().getTitle().contains(ChatColor.GREEN + "Warps")) return;
+    public void onDrag(InventoryDragEvent event) {
+        if (!event.getInventory().getTitle().contains(ChatColor.GREEN + "Warps"))
+            return;
+
         event.setCancelled(true);
     }
 }

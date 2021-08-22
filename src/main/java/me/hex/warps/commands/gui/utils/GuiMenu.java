@@ -15,14 +15,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class GuiMenu implements Listener {
 
     private final JavaPlugin plugin;
     private List<Inventory> pages;
-    Pattern pattern = Pattern.compile("\\d+");
     private static final ItemStack next = new ItemStack(Material.ARROW);
 
     static {
@@ -80,14 +77,19 @@ public class GuiMenu implements Listener {
         return pages.get(pages.size() - 1);
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onClick(InventoryClickEvent event) {
+
+        if (!pages.contains(event.getClickedInventory())) return;
+        event.setCancelled(true);
 
         if (!next.isSimilar(event.getCurrentItem())) return;
 
-        Matcher m = pattern.matcher(ChatColor.stripColor(event.getView().getTitle()));
-        if (m.find()) {
-            event.getWhoClicked().openInventory(pages.get(Integer.parseInt(m.group())));
+        int index = pages.indexOf(event.getClickedInventory());
+
+        // Make sure we have a new menu to display.
+        if (pages.size() > index) {
+            event.getWhoClicked().openInventory(pages.get(index + 1));
         }
     }
 }
